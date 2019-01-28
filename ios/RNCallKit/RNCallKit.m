@@ -67,7 +67,8 @@ RCT_EXPORT_MODULE()
              RNCallKitPerformEndCallAction,
              RNCallKitDidActivateAudioSession,
              RNCallKitDidDisplayIncomingCall,
-             RNCallKitDidPerformSetMutedCallAction
+             RNCallKitDidPerformSetMutedCallAction,
+             RNCallKitDidReceiveDTMFCallAction
              ];
 }
 
@@ -484,4 +485,15 @@ continueUserActivity:(NSUserActivity *)userActivity
     [action fulfill];
 }
 
+-(void)provider:(CXProvider *)provider performDTMFCallAction:(CXPlayDTMFCallAction *)action
+{
+#ifdef DEBUG
+    NSLog(@"[RNCallKit][CXProviderDelegate][provider:performDTMFCallAction]");
+#endif
+    NSString *digits = action.digits
+    [self sendEventWithName:RNCallKitDidReceiveDTMFCallAction body:@{ @"digits": @(digits) }];
+    [action fulfill];
+}
+
 @end
+
